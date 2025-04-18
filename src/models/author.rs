@@ -12,12 +12,12 @@ pub struct Author {
 impl Author {
     pub fn new(name: String) -> Self {
         let now = Utc::now();
-        Self{
-            id : Uuid::new_v4(),
+        Self {
+            id: Uuid::new_v4(),
             name,
-            books_id: 
-
-
+            books_id: Vec::<Uuid>::new(),
+            created_at: now,
+            updated_at: now,
         }
     }
 }
