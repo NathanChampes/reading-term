@@ -1,0 +1,15 @@
+[package]
+name = "reading-term"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+authors = ["CHAMPES <nathan.champes@gmail.com>"]
+
+[dependencies]
+crossterm = "0.28.1"
+ratatui = "0.29.0"
+color-eyre = "0.6.3"
+uuid = {version = "1.16.0", features = ["v4"]}
+utc = "0.2.0"
+chrono = "0.4.40"
+
