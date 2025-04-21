@@ -1,3 +1,6 @@
+use chrono::{DateTime, Utc};
+use uuid::Uuid;
+
 pub struct Note {
     pub id: Uuid,
     pub book_id: Uuid,
