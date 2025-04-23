@@ -26,7 +26,7 @@ impl Book {
         Self {
             id: Uuid::new_v4(),
             name,
-            authors_id: authors_id,
+            authors_id,
             state: ReadingStatus::ToRead,
             created_at: now,
             updated_at: now,
@@ -53,12 +53,31 @@ impl Book {
     }
 }
 
+// La c'est l'implémentation du display pour l'enum
+impl fmt::Display for ReadingStatus {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let status = match self {
+            ReadingStatus::ToRead => "To Read",
+            ReadingStatus::Reading => "Reading",
+            ReadingStatus::Read => "Read",
+        };
+        write!(f, "{}", status)
+    }
+}
+
 impl fmt::Display for Book {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        // On récupère tous les auteurs et on les join genre : victor hugo, gros con, ect
+        let authors = self
+            .authors_id
+            .iter()
+            .map(|id| id.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
         write!(
             f,
-            "id: {}, name: {}, authors_id: {}, state: {}, created_at: {}, updated_at: {}",
-            self.id, self.name, self.authors_id, self.state, self.created_at, self.updated_at
-        );
+            "id: {}, name: {}, authors_id: [{}], state: {}, created_at: {}, updated_at: {}",
+            self.id, self.name, authors, self.state, self.created_at, self.updated_at
+        )
     }
 }

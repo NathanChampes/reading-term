@@ -1,13 +1,14 @@
 mod models;
 
-use crate::models::{Author, Book, Note};
+use crate::models::{Author, Book};
 
 fn main() {
-    let mut author1 = Author::new("Victor Hugo".to_string());
-    author1.display();
+    let author1 = Author::new("Victor Hugo".to_string());
+    println!("test display auteur : {}", author1);
 
     // Je découvre juste l'utilisation des trucs
     let mut vec = Vec::new();
     vec.push(author1.id);
-    let _book1 = Book::new("Digital minimalism".to_string(), vec);
+    let book1 = Book::new("Les misérables".to_string(), vec);
+    println!("test display livre : {}", book1);
 }

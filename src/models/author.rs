@@ -1,4 +1,5 @@
 use chrono::{DateTime, Utc};
+use std::fmt;
 use uuid::Uuid;
 
 // On défini la structure des auteurs
@@ -36,8 +37,20 @@ impl Author {
             self.updated_at = Utc::now();
         }
     }
+}
 
-    pub fn display(&mut self) {
-        println!("{}, {}", self.id, self.name);
+impl fmt::Display for Author {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let books = self
+            .books_id
+            .iter()
+            .map(|id| id.to_string())
+            .collect::<Vec<_>>()
+            .join(", ");
+        write!(
+            f,
+            "id: {}, name: {}, books_id: [{}],created_at: {}, updated_at: {}",
+            self.id, self.name, books, self.created_at, self.updated_at
+        )
     }
 }
