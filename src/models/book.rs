@@ -2,6 +2,8 @@ use chrono::{DateTime, Utc};
 use std::fmt;
 use uuid::Uuid;
 
+use crate::models::Author;
+
 // Trois cas de statut
 pub enum ReadingStatus {
     ToRead,
@@ -21,10 +23,19 @@ pub struct Book {
 }
 
 impl Book {
-    pub fn new(name: String, authors_id: Vec<Uuid>) -> Self {
+    pub fn new(name: String, mut authors: Vec<&mut Author>) -> Self {
         let now = Utc::now();
+        let id = Uuid::new_v4();
+
+        // Pour chaque auteur passé en paramètre d'initialisation, on ajoute le livre
+        for author in &mut authors {
+            author.add_book(id);
+        }
+
+        // pour chaque auteur on récupère l'id dans la collection
+        let authors_id = authors.iter().map(|author| author.id).collect();
         Self {
-            id: Uuid::new_v4(),
+            id,
             name,
             authors_id,
             state: ReadingStatus::ToRead,
@@ -38,17 +49,25 @@ impl Book {
         self.updated_at = Utc::now();
     }
 
-    pub fn add_author(&mut self, authors_id: Uuid) {
-        if !self.authors_id.contains(&authors_id) {
-            self.authors_id.push(authors_id);
+    pub fn add_author(&mut self, author: &mut Author) {
+        if !self.authors_id.contains(&author.id) {
+            self.authors_id.push(author.id);
             self.updated_at = Utc::now();
+
+            // En gros j'ai modifié la façon dont on gère l'ajout parce que je veux que les liens
+            // soient bidirectionnels
+            author.add_book(self.id);
         }
     }
 
-    pub fn remove_author(&mut self, authors_id: Uuid) {
-        if self.authors_id.contains(&authors_id) {
-            // a trouver parce que j'ai pas compris la
+    pub fn remove_author(&mut self, author: &mut Author) {
+        if self.authors_id.contains(&author.id) {
+            self.authors_id.retain(|&id| id != author.id);
             self.updated_at = Utc::now();
+
+            // Du coup forcément ici aussi on appel une méthode de la structure autheur pour la
+            // synchronisation bidirectionnelle
+            author.remove_book(self.id);
         }
     }
 }
