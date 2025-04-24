@@ -15,6 +15,7 @@ pub enum ReadingStatus {
 pub struct Book {
     pub id: Uuid,
     pub name: String,
+    pub page: u32,
     // Il peut y avoir un 1...N auteurs qui participent
     pub authors_id: Vec<Uuid>, // Ici on charge également un indentifiant pour que ce soit léger
     pub state: ReadingStatus,
@@ -23,7 +24,7 @@ pub struct Book {
 }
 
 impl Book {
-    pub fn new(name: String, mut authors: Vec<&mut Author>) -> Self {
+    pub fn new(name: String, page: u32, mut authors: Vec<&mut Author>) -> Self {
         let now = Utc::now();
         let id = Uuid::new_v4();
 
@@ -37,6 +38,7 @@ impl Book {
         Self {
             id,
             name,
+            page,
             authors_id,
             state: ReadingStatus::ToRead,
             created_at: now,
@@ -95,8 +97,8 @@ impl fmt::Display for Book {
             .join(", ");
         write!(
             f,
-            "id: {}, name: {}, authors_id: [{}], state: {}, created_at: {}, updated_at: {}",
-            self.id, self.name, authors, self.state, self.created_at, self.updated_at
+            "id: {}, name: {}, page: {}, authors_id: [{}], state: {}, created_at: {}, updated_at: {}",
+            self.id, self.name, self.page, authors, self.state, self.created_at, self.updated_at
         )
     }
 }
